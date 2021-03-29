@@ -1,0 +1,57 @@
+plugins {
+    id "org.jetbrains.intellij" version "0.5.0"
+    id 'java'
+    id 'jacoco'
+}
+
+group 'wanted'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+final String ide_home = System.getenv('IDE_HOME')
+
+test {
+    // This path value is machine-specific placeholder text.
+    // Set idea.home.path to the absolute path to the intellij-community source
+    // on your local machine.
+    // Use variants described in https://docs.gradle.org/current/userguide/build_environment.html
+    // for real world projects.
+    systemProperty "idea.home.path", "${ide_home}"
+    finalizedBy jacocoTestReport
+}
+
+jacoco {
+    toolVersion = "0.8.5"
+    reportsDir = file("$buildDir/customJacocoReportDir")
+}
+
+jacocoTestReport {
+    reports {
+        xml.enabled false
+        csv.enabled false
+        html.destination file("${buildDir}/jacocoHtml")
+    }
+}
+
+
+
+dependencies {
+    implementation 'org.junit.jupiter:junit-jupiter:5.4.2'
+    testImplementation group: 'junit', name: 'junit', version: '4.12'
+}
+
+// See https://github.com/JetBrains/gradle-intellij-plugin/
+intellij {
+    version '2020.2'
+    plugins 'java'
+}
+
+
+sourceCompatibility = 11
+targetCompatibility = 11
+
+apply plugin: 'java'
+
